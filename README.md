@@ -230,7 +230,7 @@ MIT — veja o arquivo [LICENSE](LICENSE).
 > Feito com ❤️ para estudantes e profissionais que querem aprender segurança da informação sem perder a ética.
 ## Notas para o portfólio
 
-> **Ético:** só processa logs fictícios. A opção de triagem com IA, se ativada, envia os dados para um endpoint de API **configurável por você** via variável de ambiente `--ai-endpoint`. Nada vai para servidores externos por padrão — você deve definir explicitamente onde os dados serão enviados.
+> **Privacidade da IA:** o parser e as regras locais não enviam dados para fora. O script opcional `scripts/ai_explain.py`, quando executado com `LOG_SENSE_API_KEY`, envia detalhes dos alertas e até duas entradas de log ao endpoint definido em `LOG_SENSE_BASE_URL`. Se essa variável não for definida, o endpoint padrão é `https://api.openai.com/v1`. Use apenas logs que você esteja autorizado a compartilhar com o serviço configurado.
 - **Reprodutível:** `samples/log.txt` é o input; o alerta gerado é o output.
 - **MITRE ATT&CK (mapa conceitual desses cenários):**
   - `T1110` Brute Force (regra `brute_force`)
