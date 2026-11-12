@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+"""
+Gera um log de analise para o log-sense.
+Este log contem cenarios simulados de ataques (Blue Team / Red Team learning):
+- Brute force SSH
+- SQL injection
+- XSS reflectida
+- Acesso nao autorizado (401/403)
+- Acesso a arquivos criticos
+- Execucao de comando proibido
+- Enumeracao de usuarios
+
+Todos os cenarios sao FASTRIOS ficticios (laboratorio). Nada e atacado de verdade.
+"""
+
+import os
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent
+
+SAMPLE = """# === Log de Analise - log-sense Blue Team Lab (simulado) ===
+# Data/hora: 2026-11-11 08:00:00
+# Ambiente: laboratorio interno (virtual)
+# Fonte: servidores de log sinteticos (nginx, auth, aplicacao)
+# -- NADA E ATACADO DE VERDADE --
+
+# --- Cenario 1: Brute Force SSH (T1110) ---
+2026-11-11 08:01:01 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:02 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:03 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:04 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:05 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:06 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:07 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:08 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:09 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:10 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:11 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:12 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:13 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:14 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:15 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:16 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:17 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:18 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:19 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:20 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:21 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:22 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:23 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:24 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:25 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:26 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:27 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:28 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:29 WARN login user=admin ip=203.0.113.45 result=failed
+2026-11-11 08:01:30 WARN login user=admin ip=203.0.113.45 result=failed
+
+# --- Cenario 2: SQL Injection (T1190) ---
+2026-11-11 08:10:01 INFO access user=adm ip=10.0.0.10 file="/search?q= OR 1=1" result=failed
+2026-11-11 08:10:02 INFO access user=adm ip=10.0.0.10 file="/search?q=UNION SELECT username,password FROM users" result=failed
+2026-11-11 08:10:03 INFO access user=adm ip=10.0.0.10 file='/api?id=1'--' result=failed
+2026-11-11 08:10:04 INFO access user=adm ip=10.0.0.10 file="/products?id=1;DROP TABLE users;--" result=failed
+2026-11-11 08:10:05 INFO access user=adm ip=10.0.0.10 file="/login?user=admin' OR '1'='1' --&pass=anything" result=failed
+2026-11-11 08:10:06 INFO access user=adm ip=10.0.0.10 file="/dashboard?search='%20UNION%20SELECT%20null,null,'Hacked'%20--" result=failed
+
+# --- Cenario 3: XSS Reflectida (T1059) ---
+2026-11-11 08:15:01 INFO access user=adm ip=10.0.0.10 file="/comments?id=<script>alert('XSS')</script>" result=failed
+2026-11-11 08:15:02 INFO access user=adm ip=10.0.0.10 file="/search?q=javascript:alert(1)" result=failed
+2026-11-11 08:15:03 INFO access user=adm ip=10.0.0.10 file="/profile?name=<img src=x onerror=alert(1)>" result=failed
+2026-11-11 08:15:04 INFO access user=adm ip=10.0.0.10 file="/search?q=<svg onload=alert('XSS')>" result=failed
+
+# --- Cenario 4: Acesso nao Autorizado / HTTP Brute Force (T1110.001) ---
+2026-11-11 08:20:01 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:02 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:03 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:04 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:05 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:06 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:07 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:08 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:09 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:10 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:11 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:12 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:13 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:14 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+2026-11-11 08:20:15 WARN access user=adm ip=198.51.100.22 result=denied file=/admin result=denied
+
+# --- Cenario 5: Enumeracao de Usuarios (T1078) ---
+2026-11-11 08:25:01 WARN login user=root ip=10.0.0.20 result=failed
+2026-11-11 08:25:02 WARN login user=guest ip=10.0.0.20 result=failed
+2026-11-11 08:25:03 WARN login user=test ip=10.0.0.20 result=failed
+2026-11-11 08:25:04 WARN login user=admin ip=10.0.0.20 result=failed
+2026-11-11 08:25:05 WARN login user=support ip=10.0.0.20 result=failed
+2026-11-11 08:25:06 WARN login user=info ip=10.0.0.20 result=failed
+2026-11-11 08:25:07 WARN login user=backup ip=10.0.0.20 result=failed
+
+# --- Cenario 6: Acesso a Arquivos Criticos (T1003) ---
+2026-11-11 08:30:01 WARN access user=adm ip=10.0.0.10 file=/etc/shadow result=denied
+2026-11-11 08:30:02 WARN access user=adm ip=10.0.0.10 file=/etc/passwd result=denied
+2026-11-11 08:30:03 WARN access user=adm ip=10.0.0.10 file=/etc/sudoers result=denied
+2026-11-11 08:30:04 WARN access user=adm ip=10.0.0.10 file=/root/.ssh/authorized_keys result=denied
+2026-11-11 08:30:05 WARN access user=adm ip=10.0.0.10 file=/home/admin/.bash_history result=denied
+2026-11-11 08:30:06 WARN access user=adm ip=10.0.0.10 file=/var/log/auth.log result=denied
+
+# --- Cenario 7: Execucao de Comando Proibido (T1059) ---
+2026-11-11 08:35:01 WARN exec user=adm ip=10.0.0.10 result=rm-rf-/
+2026-11-11 08:35:02 WARN exec user=adm ip=10.0.0.10 result=mkfs
+2026-11-11 08:35:03 WARN exec user=adm ip=10.0.0.10 result=chmod-777-/
+2026-11-11 08:35:04 WARN exec user=adm ip=10.0.0.10 result=wget-evil-shell
+
+# --- Cenario 8: Conexao Cruzada de IPs (T1021) ---
+2026-11-11 08:40:01 WARN login user=adm ip=10.0.0.10 result=success
+2026-11-11 08:40:01 WARN login user=adm ip=203.0.113.88 result=failed file=/api result=failed
+2026-11-11 08:40:02 WARN login user=adm ip=10.0.0.10 result=success file=/dashboard result=success
+2026-11-11 08:40:01 WARN login user=adm ip=203.0.113.99 result=failed file=/api result=failed
+
+# --- Cenario 9: Sessao Inativa (T1078.003) ---
+2026-11-11 08:45:01 INFO login user=adm ip=10.0.0.10 result=success
+# (sessao ficou inativa por 35 minutos)
+2026-11-11 09:20:01 WARN access user=adm ip=10.0.0.10 file=/home result=failed
+
+# --- Cenario 10: Coleta de Logs (T1074) ---
+2026-11-11 08:50:01 WARN access user=adm ip=10.0.0.10 file=/backup/Logs-2026-11-11.tar.gz result=failed
+2026-11-11 08:50:02 WARN access user=adm ip=10.0.0.10 file=/etc/confidential.tar.gz result=denied
+
+# --- Resumo da analise ---
+# Total de eventos: 80
+# Total de alertas esperados: 20+ (usando regras do log-sense)
+# - brute_force: T1110
+# - sql_injection: T1190
+# - xss_reflected: T1059
+# - unauthorized_access: T1110.001
+# - user_enumeration: T1078
+# - sensitive_file_access: T1003
+# - forbidden_command: T1059
+# - ip_fingerprint_breach: T1021
+# - idle_session: T1078.003
+# ---
+"""
+
+# Salva o log gerado em samples/log_sintetico.txt
+out_path = BASE.parent / "samples" / "log_sintetico.txt"
+with open(out_path, "w", encoding="utf-8") as fh:
+    fh.write(SAMPLE)
+print("[generate_log] log gerado: %s (%d linhas)" % (out_path, len(SAMPLE.splitlines())))

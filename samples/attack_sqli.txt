@@ -1,0 +1,5 @@
+2026-11-11 09:00:01 INFO access user=adm ip=10.0.0.10 file=/search?q=' OR '1'='1 result=failed
+2026-11-11 09:00:02 INFO access user=adm ip=10.0.0.10 file=/admin' UNION SELECT username,password FROM users result=denied
+2026-11-11 09:00:03 INFO access user=adm ip=10.0.0.10 file=/api?id=1'-- result=failed
+2026-11-11 09:00:04 INFO access user=adm ip=10.0.0.10 file=/info.php?cmd=;DROP TABLE users result=denied
+2026-11-11 09:00:05 INFO access user=adm ip=10.0.0.10 file=/db.php?schema=information_schema result=denied

@@ -1,0 +1,19 @@
+2026-11-11 09:00:01 INFO login user=adm ip=10.0.0.10 result=success
+2026-11-11 09:00:02 INFO access user=adm ip=10.0.0.10 file=/admin/result.php?user=admin' OR '1'='1 result=failed
+2026-11-11 09:00:03 INFO access user=adm ip=10.0.0.10 file=/search?q=<script>alert(1)</script> result=failed
+2026-11-11 09:00:04 ERROR access user=adm ip=10.0.0.10 result=denied
+2026-11-11 09:00:05 WARN access user=adm ip=10.0.0.10 result=denied
+2026-11-11 09:00:06 WARN access user=adm ip=10.0.0.10 result=denied
+2026-11-11 09:00:07 WARN access user=adm ip=10.0.0.10 result=denied
+2026-11-11 09:00:08 WARN access user=adm ip=10.0.0.10 result=denied
+2026-11-11 09:00:09 WARN access user=adm ip=10.0.0.10 result=denied
+2026-11-11 10:00:01 INFO login user=usr1 ip=10.0.0.20 result=success
+2026-11-11 10:00:02 INFO access user=usr2 ip=10.0.0.21 file=/admin result=failed
+2026-11-11 10:00:03 INFO login user=usr2 ip=10.0.0.22 result=failed
+2026-11-11 10:00:04 INFO login user=usr3 ip=10.0.0.23 result=failed
+2026-11-11 10:00:05 INFO login user=usr4 ip=10.0.0.24 result=failed
+2026-11-11 10:00:06 INFO login user=usr5 ip=10.0.0.25 result=failed
+2026-11-11 10:00:07 INFO login user=usr6 ip=10.0.0.26 result=failed
+2026-11-11 10:00:08 INFO access user=usr1 ip=10.0.0.20 file=/tmp result=failed
+2026-11-11 10:15:01 INFO login user=usr1 ip=10.0.0.20 result=success
+2026-11-11 10:20:01 INFO access user=usr1 ip=10.0.0.20 file=/home result=failed

@@ -1,0 +1,40 @@
+# Dependências do log-sense
+
+Nada além do Python padrão (3.8+). Os módulos utilizados são do
+biblioteca padrão (`re`, `json`, `csv`, `http.server`, `argparse`, etc.).
+
+## Opcional (para executar a parte de IA)
+
+Se você quiser rodar o `ai_explain.py` (a parte que o LLM explica os
+alertas), instale o `requests`:
+
+```bash
+pip install requests
+```
+
+Então defina a chave:
+
+```bash
+export LOG_SENSE_API_KEY=seu_token
+```
+
+**Nota de segurança:** a chave NUNCA é gravada em arquivos. Ela é lida
+apenas de variável de ambiente.
+
+---
+
+## Opção de modo desenvolvimento (opcional)
+
+Para rodar a aplicação localmente sem usar o Dockerfile:
+
+```bash
+python dashboard.py
+# abra http://localhost:8765
+```
+
+## Rodar os testes
+
+```bash
+pip install pytest
+pytest
+```

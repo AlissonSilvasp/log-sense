@@ -1,0 +1,23 @@
+# Gerações durante rodagem / entrega
+alerts/
+reports/
+logs-alvo/
+uploads/
+dist/
+build/
+.venv/
+*.exe
+
+# Dados ou arquivos temporários
+*.log
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Artefatos gerados e arquivos auxiliares temporários
+log-analysis.pdf
+dashboard_extracted.js
+reconstruct_tmp.py
+
+# Segredos / credenciais (NUNCA commitar)
+.env
