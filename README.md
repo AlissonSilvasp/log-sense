@@ -90,6 +90,12 @@ pip install -r requirements.txt
 # 2. Rodar o dashboard
 python dashboard.py
 # → abra http://localhost:8765
+
+> ⚠️ **Segurança do dashboard:** a interface web **não tem autenticação** e, por
+> padrão, escuta em **0.0.0.0** (todas as interfaces da máquina). Não exporte a
+> porta em ambientes com outros dispositivos na rede — use `LOG_SENSE_HOST=127.0.0.1`
+> para apenas localhost, ou coloque trás de balcão um proxy/com usuário para
+> proteger o acesso.
 ```
 
 ### Opção 2 — Docker
@@ -209,7 +215,11 @@ Recomendamos:
 - Não testar em redes ou servidores de produção.
 - Respeitar leis e políticas de segurança de cada organização.
 
----
+> ⚠️ **Dashboard:** a interface web **não tem autenticação**. Por padrão ela escuta
+> em `0.0.0.0` (todas as interfaces). Se for expor a porta em rede, use
+> `LOG_SENSE_HOST=127.0.0.1` para restringir a localhost ou adicione seu próprio
+> proxy/firewall para controlar o acesso. O projeto é educacional e **não deve ser
+> usado como painel de segurança de produção**.
 
 ## Licença
 
@@ -220,7 +230,7 @@ MIT — veja o arquivo [LICENSE](LICENSE).
 > Feito com ❤️ para estudantes e profissionais que querem aprender segurança da informação sem perder a ética.
 ## Notas para o portfólio
 
-- **Ético:** só processa logs fictícios. Nada é enviado para servers externos.
+> **Ético:** só processa logs fictícios. A opção de triagem com IA, se ativada, envia os dados para um endpoint de API **configurável por você** via variável de ambiente `--ai-endpoint`. Nada vai para servidores externos por padrão — você deve definir explicitamente onde os dados serão enviados.
 - **Reprodutível:** `samples/log.txt` é o input; o alerta gerado é o output.
 - **MITRE ATT&CK (mapa conceitual desses cenários):**
   - `T1110` Brute Force (regra `brute_force`)
